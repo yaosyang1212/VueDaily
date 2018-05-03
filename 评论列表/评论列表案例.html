@@ -31,6 +31,24 @@
     .cmt-body {
       text-indent: 2em;
     }
+    .v-enter,
+    .v-leave-to{
+      opacity: 0;
+      transform: translateY(200px)
+    }
+    .v-enter-active,
+    .v-leave-active{
+      transition: all 0.8s ease;
+    }
+
+    .v-move{
+      transition: all 0.8s ease;
+    }
+
+    .v-leave-active{
+      position: absolute;
+    }
+
   </style>
 </head>
 
@@ -41,12 +59,12 @@
     <!-- v-bind   :  传递普通数据 -->
     <!-- v-on     @  传递方法 -->
     <ct-box @func='getInfo'></ct-box>
-    <div class="cmt-list">
+    <transition-group tag='div' class="cmt-list">
       <div class="cmt-item" v-for='item of infoList' :key='item.id'>
         <div class="cmt-header">评论人：{{item.name}}</div>
         <div class="cmt-body">评论内容：{{item.content}}</div>
       </div>
-    </div>
+    </transition-group>
 
   </div>
 
