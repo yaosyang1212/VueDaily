@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./lib/vue-2.5.16.js"></script>
+  <!-- 导入 路由的包， 注意：一定要把 路由的包，放到 Vue 包的下面 -->
+  <!-- 当 导入 路由的包 以后，在 window 全局，就多了一个构造函数 VueRouter -->
+  <script src="./lib/vue-router-v3.0.1.js"></script>
+  <link rel="stylesheet" href="./lib/bootstrap-3.3.7.css">
+  <style>
+    .router-link-active {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- router-link 就是 第一步，创建 路由的 hash 链接的 -->
+    <!-- to 属性，表示 点击此链接，要跳转到哪个 hash 地址， 注意：to 属性中，大家不需要以 # 开头 -->
+    <nav>
+      <ul class="pagination">
+        <router-link to="/home" tag="li">
+          <span>首页</span>
+        </router-link>
+        <router-link :to="{ name: 'moviePage', params: { id: 9, type: 'top250' } }" tag="li">
+          <span>电影</span>
+        </router-link>
+        <!-- 如果使用命名路由进行跳转，一定要给 to 属性做一下 属性绑定 -->
+        <router-link :to="{ name: 'aboutPage' }" tag="li">
+          <span>关于</span>
+        </router-link>
+       
+      </ul>
+    </nav>
+    <!-- 这是路由的容器，将来，通过路由规则，匹配到的组件，都会被展示到这个 容器中 -->
+    <router-view></router-view>
+  </div>
+
+  <script>
+    // 创建 首页组件 的配置对象
+    const home = {
+      template: '<h3>首页组件</h3>'
+    }
+
+    const movie = {
+      template: '<h3>电影组件 --- {{type}} --- {{id}}</h3>',
+      props: ['type', 'id']
+    }
+
+    const about = {
+      template: '<h3>关于组件</h3>'
+    }
+
+    // 创建路由规则（对应关系）
+    const router = new VueRouter({ // 配置对象中，要提供 hash 地址 到 组件之间的 对应关系
+      routes: [ // 这个 routes 就是 路由 规则 的数组，里面要放很多的对应关系
+        // { path: 'hash地址', component: 配置对象 }
+        { path: '/home', component: home },
+        { path: '/movie/:type/:id', component: movie, props: true, name: "moviePage" },
+        { path: '/about', component: about, name: 'aboutPage' }
+      ],
+      linkActiveClass: 'active' // 可以通过 linkActiveClass 来配置 激活路由 所应用的类名， 默认 为  router-link-active
+    })
+
+    // 创建 Vue 实例，得到 ViewModel
+    var vm = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+      // router: router
+      router // 把 创建的路由对象，一定要挂载到 VM 实例上，否则路由不会生效
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./lib/vue-2.5.16.js"></script>
+  <!-- 导入 路由的包， 注意：一定要把 路由的包，放到 Vue 包的下面 -->
+  <!-- 当 导入 路由的包 以后，在 window 全局，就多了一个构造函数 VueRouter -->
+  <script src="./lib/vue-router-v3.0.1.js"></script>
+  <link rel="stylesheet" href="./lib/bootstrap-3.3.7.css">
+</head>
+
+<body>
+  <div id="app">
+    <nav>
+      <ul class="pagination">
+        <router-link to='/login' tag='li'>
+          <span>登录</span>
+        </router-link>
+        <router-link to='/home' tag='li'>
+          <span>首页</span>
+        </router-link>
+        <router-link to='/movie' tag='li'>
+          <span>电影</span>
+        </router-link>
+      </ul>
+    </nav>
+    <router-view></router-view>
+  </div>
+  <script>
+    const login = {
+      template: `<div>
+          <h3>登录组件</h3>
+          <hr/>
+          <p>登录名:<input/></p>
+          <p>密码:<input/></p>
+          <p><button @click='login'>登录</button></p> 
+      </div>`,
+      methods: {
+        login() {
+          // 用户已经登录
+          sessionStorage.setItem('islogin', 'yes');
+        }
+      }
+    }
+    const home = {
+      template: `<h3>首页组件</h3>`
+    }
+    const movie = {
+      template: `<h3>电影组件</h3>`
+    }
+    // 创建路由规则（对应关系）
+    const router = new VueRouter({
+      routes: [
+        { path: '/', redirect: '/home' },
+        { path: '/home', component: home },
+        { path: '/movie', component: movie },
+        { path: '/login', component: login }
+      ],
+      // 当前高亮显示
+      linkActiveClass: 'active'
+    })
+    // 路由导航守卫
+    router.beforeEach((to, from, next) => {
+      // console.log(to);
+      // console.log(from);
+      if(to.path === '/login') return next();
+      const login = sessionStorage.getItem('islogin');
+      if (login !== 'yes') return next('/login');
+
+      next();
+    })
+    var vm = new Vue({
+      el: '#app',
+      data: {
+
+      },
+      methods: {
+
+      },
+      router
+    })
+
+
+
+
+  </script>
+
+</body>
+
+</html>
